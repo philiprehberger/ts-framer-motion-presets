@@ -106,8 +106,70 @@ export function createSpiralStagger() {
 }
 
 // =============================================================================
+// BLUR / ROTATE ENTRANCE ANIMATIONS
+// =============================================================================
+
+export const blurIn: Variants = {
+  initial: { opacity: 0, filter: 'blur(10px)' },
+  animate: {
+    opacity: 1,
+    filter: 'blur(0px)',
+    transition: { duration: 0.5, ease: easing.easeOut },
+  },
+  exit: {
+    opacity: 0,
+    filter: 'blur(10px)',
+    transition: { duration: 0.3, ease: easing.easeIn },
+  },
+};
+
+export const rotateIn: Variants = {
+  initial: { opacity: 0, rotate: -180, scale: 0.5 },
+  animate: {
+    opacity: 1,
+    rotate: 0,
+    scale: 1,
+    transition: { duration: 0.6, ease: easing.easeOut },
+  },
+  exit: {
+    opacity: 0,
+    rotate: 180,
+    scale: 0.5,
+    transition: { duration: 0.4, ease: easing.easeIn },
+  },
+};
+
+// =============================================================================
 // 3D TRANSFORM ANIMATIONS
 // =============================================================================
+
+export const flipX: Variants = {
+  initial: { rotateX: -90, opacity: 0 },
+  animate: {
+    rotateX: 0,
+    opacity: 1,
+    transition: { duration: 0.6, ease: easing.easeOut },
+  },
+  exit: {
+    rotateX: 90,
+    opacity: 0,
+    transition: { duration: 0.4, ease: easing.easeIn },
+  },
+};
+
+export const flipY: Variants = {
+  initial: { rotateY: -90, opacity: 0 },
+  animate: {
+    rotateY: 0,
+    opacity: 1,
+    transition: { duration: 0.6, ease: easing.easeOut },
+  },
+  exit: {
+    rotateY: 90,
+    opacity: 0,
+    transition: { duration: 0.4, ease: easing.easeIn },
+  },
+};
 
 export const flip3D: Variants = {
   initial: { rotateY: -90, opacity: 0 },

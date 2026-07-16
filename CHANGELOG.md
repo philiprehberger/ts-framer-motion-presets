@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.0
+
+- Add `createStagger()` factory for stagger containers with custom timing and direction
+- Add `withReducedMotion()` helper to collapse variants to an instant transition when reduced motion is preferred
+- Add `blurIn`, `rotateIn`, `flipX`, and `flipY` entrance variants
+- Add README card image and correct the API reference (parallax/scroll-reveal signatures, easing keys, transitions list)
+
 ## 0.2.11
 
 - Fix README GitHub URLs to use correct repo name (ts-framer-motion-presets)

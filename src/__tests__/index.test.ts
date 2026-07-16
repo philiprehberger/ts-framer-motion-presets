@@ -115,4 +115,42 @@ describe('accessibility', () => {
   it('prefersReducedMotion is a function', () => {
     assert.equal(typeof mod.prefersReducedMotion, 'function');
   });
+
+  it('withReducedMotion passes variants through when motion is not reduced', () => {
+    assert.equal(typeof mod.withReducedMotion, 'function');
+    // No `window`/matchMedia in the test runner → preference reads as false.
+    const result = mod.withReducedMotion(mod.fadeInUp);
+    assert.strictEqual(result, mod.fadeInUp);
+  });
+});
+
+describe('new entrance variants', () => {
+  for (const name of ['blurIn', 'rotateIn', 'flipX', 'flipY']) {
+    it(`${name} has initial and animate`, () => {
+      assert.ok(mod[name], `${name} is exported`);
+      assert.ok(mod[name].initial !== undefined, `${name}.initial exists`);
+      assert.ok(mod[name].animate !== undefined, `${name}.animate exists`);
+    });
+  }
+});
+
+describe('createStagger factory', () => {
+  it('is a function', () => assert.equal(typeof mod.createStagger, 'function'));
+
+  it('applies default timing', () => {
+    const container = mod.createStagger();
+    assert.equal(container.animate.transition.staggerChildren, 0.1);
+    assert.equal(container.animate.transition.staggerDirection, 1);
+  });
+
+  it('honors custom timing and direction', () => {
+    const container = mod.createStagger({
+      staggerChildren: 0.2,
+      delayChildren: 0.5,
+      direction: -1,
+    });
+    assert.equal(container.animate.transition.staggerChildren, 0.2);
+    assert.equal(container.animate.transition.delayChildren, 0.5);
+    assert.equal(container.animate.transition.staggerDirection, -1);
+  });
 });

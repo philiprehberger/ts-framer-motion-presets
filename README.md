@@ -4,6 +4,8 @@
 [![npm version](https://img.shields.io/npm/v/@philiprehberger/framer-motion-presets.svg)](https://www.npmjs.com/package/@philiprehberger/framer-motion-presets)
 [![Last updated](https://img.shields.io/github/last-commit/philiprehberger/ts-framer-motion-presets)](https://github.com/philiprehberger/ts-framer-motion-presets/commits/main)
 
+![@philiprehberger/framer-motion-presets](https://raw.githubusercontent.com/philiprehberger/ts-framer-motion-presets/main/package-card.webp)
+
 Reusable Framer Motion animation presets, variants, and transitions
 
 ## Installation
@@ -41,14 +43,42 @@ import { prefersReducedMotion, fadeInUp } from '@philiprehberger/framer-motion-p
 <motion.div variants={prefersReducedMotion() ? {} : fadeInUp} />
 ```
 
+Or wrap any variant with `withReducedMotion()` — it collapses to an instant, transform-free transition when reduced motion is preferred, and returns the variant unchanged otherwise:
+
+```ts
+import { withReducedMotion, fadeInUp } from '@philiprehberger/framer-motion-presets';
+
+<motion.div variants={withReducedMotion(fadeInUp)} initial="initial" animate="animate" />
+```
+
+### Custom Stagger
+
+Build a stagger container with your own timing via `createStagger()`:
+
+```ts
+import { createStagger, staggerItem } from '@philiprehberger/framer-motion-presets';
+import { motion } from 'framer-motion';
+
+const container = createStagger({ staggerChildren: 0.15, delayChildren: 0.2, direction: -1 });
+
+<motion.ul variants={container} initial="initial" animate="animate">
+  {items.map((item) => (
+    <motion.li key={item.id} variants={staggerItem}>{item.name}</motion.li>
+  ))}
+</motion.ul>
+```
+
 ## API
 
 ### Transitions & Easing
 
 | Export | Description |
 |--------|-------------|
-| `easing` | Easing curves (ease, easeIn, easeOut, etc.) |
-| `transitions` | Named transitions: `fast`, `base`, `slow`, `bounce`, `spring` |
+| `easing` | Easing curves: `easeIn`, `easeOut`, `easeInOut`, `bounce` |
+| `transitions` | Named transitions: `fast`, `base`, `slow`, `bounce`, `spring`, `springBounce` |
+| `getTransitionDuration(duration)` | Duration, shortened to near-zero under reduced motion |
+| `prefersReducedMotion()` | `true` if the OS "prefers-reduced-motion" setting is on |
+| `withReducedMotion(variants)` | Guard a variants object behind the reduced-motion preference |
 
 ### Fade / Scale / Slide Variants
 
@@ -68,6 +98,7 @@ All have `initial`, `animate`, and optionally `exit` states:
 |--------|-------------|
 | `staggerContainer` | Parent with `staggerChildren` in `animate.transition` |
 | `staggerItem` | Child variant for stagger lists |
+| `createStagger(options)` | Factory for a stagger container with custom `staggerChildren` / `delayChildren` / `direction` |
 | `gridStagger` / `gridItem` | Grid-aware stagger |
 | `waveStagger` / `waveItem` | Wave pattern stagger |
 
@@ -90,13 +121,15 @@ All have `initial`, `animate`, and optionally `exit` states:
 
 | Export | Description |
 |--------|-------------|
-| `createParallax(offset)` | Parallax scroll factory |
+| `blurIn` / `rotateIn` | Blur and rotate entrance variants |
+| `flipX` / `flipY` | Single-axis 3D flip variants |
+| `createParallax(speed, direction)` | Parallax scroll transform factory |
 | `flip3D` / `cube3D` / `tilt3D` | 3D transform variants |
 | `springBounce` / `springElastic` / `springWobble` | Spring physics presets |
-| `createScrollReveal(options)` | Scroll-triggered reveal factory |
+| `createScrollReveal(direction, distance)` | Scroll-triggered reveal factory |
 | `morphVariants` | Shape morphing variant |
 | `textReveal` | Text reveal animation |
-| `createCounterAnimation(from, to)` | Animated number counter factory |
+| `createCounterAnimation(from, to, duration)` | Animated number counter transition factory |
 | `pulse` / `shimmer` / `skeleton` | Loading state animations |
 
 ## Development

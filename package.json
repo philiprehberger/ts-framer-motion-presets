@@ -1,6 +1,6 @@
 {
   "name": "@philiprehberger/framer-motion-presets",
-  "version": "0.2.11",
+  "version": "0.3.0",
   "description": "Reusable Framer Motion animation presets, variants, and transitions",
   "type": "module",
   "main": "./dist/index.cjs",

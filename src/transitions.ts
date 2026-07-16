@@ -15,6 +15,27 @@ export const getTransitionDuration = (duration: number): number => {
   return prefersReducedMotion() ? 0.01 : duration;
 };
 
+/**
+ * Collapse a variants object to an instant, transform-free transition when the
+ * user prefers reduced motion. When reduced motion is off, the variants are
+ * returned unchanged.
+ *
+ * @param variants - The variants to guard behind the reduced-motion preference
+ */
+export const withReducedMotion = (variants: Variants): Variants => {
+  if (!prefersReducedMotion()) return variants;
+
+  const reduced: Variants = {};
+  for (const [state, value] of Object.entries(variants)) {
+    const opacity =
+      typeof value === 'object' && value !== null && 'opacity' in value
+        ? ((value as { opacity?: number }).opacity ?? 1)
+        : 1;
+    reduced[state] = { opacity, transition: { duration: 0 } };
+  }
+  return reduced;
+};
+
 // =============================================================================
 // EASING FUNCTIONS
 // =============================================================================
@@ -208,6 +229,33 @@ export const staggerItem: Variants = {
       duration: getTransitionDuration(0.3),
     },
   },
+};
+
+/**
+ * Build a stagger container with custom timing.
+ *
+ * @param options.staggerChildren - Delay between each child (default `0.1`)
+ * @param options.delayChildren - Delay before the first child starts (default `0`)
+ * @param options.direction - Order children animate in: `1` forward, `-1` reverse (default `1`)
+ */
+export const createStagger = (
+  options: {
+    staggerChildren?: number;
+    delayChildren?: number;
+    direction?: 1 | -1;
+  } = {},
+): Variants => {
+  const { staggerChildren = 0.1, delayChildren = 0, direction = 1 } = options;
+  return {
+    initial: {},
+    animate: {
+      transition: {
+        staggerChildren,
+        delayChildren,
+        staggerDirection: direction,
+      },
+    },
+  };
 };
 
 // =============================================================================
